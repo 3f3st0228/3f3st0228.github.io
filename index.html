@@ -5,120 +5,236 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>3F3ST0</title>
 <link rel="icon" href="src/avatar.jpg" />
+
 <style>
-/* --- THEME COLORS --- */
+/* ========== THEME ========== */
 :root{
-  --bg:#05070a;
-  --panel:#0a0d12;
-  --cyan:#00a3e0;
-  --cyan-soft:#41c3ff;
+  --bg:#020305;
+  --cyan:#00b7ff;
+  --cyan-soft:#6ad4ff;
   --text:#d8e8f7;
   --muted:#8aa2b8;
-  --glass:rgba(255,255,255,0.03);
+  --panel:rgba(255,255,255,0.04);
   --radius:14px;
   --mono:"JetBrains Mono", monospace;
 }
 body{margin:0;background:var(--bg);color:var(--text);font-family:var(--mono);overflow-x:hidden;}
-.container{max-width:1150px;margin:30px auto;padding:20px;position:relative;z-index:2;}
 
-/* Blue Matrix Only */
-#matrix{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.18;mix-blend-mode:screen;}
+/* Container */
+.container{max-width:1150px;margin:40px auto;padding:20px;z-index:2;position:relative;}
 
-/* Static glitch */
-.glitch-layer{position:fixed;inset:0;z-index:0;pointer-events:none;background:repeating-linear-gradient(-45deg,rgba(255,255,255,0.01)3px,rgba(255,255,255,0)6px);opacity:0.04;}
+/* ===== MATRIX BACKGROUND ===== */
+#matrix-canvas{
+  position:fixed;left:0;top:0;width:100%;height:100%;
+  z-index:0;opacity:0.22;mix-blend-mode:screen;
+  background:black;
+}
 
-/* --- TOPBAR --- */
-.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
-.brand{display:flex;align-items:center;gap:14px;}
-.logo-wrap{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 25px rgba(0,163,224,0.4);background:rgba(0,0,0,0.35);backdrop-filter:blur(4px);} 
+/* Static grain overlay */
+.glitch{
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,0.015)0 2px,transparent 2px 4px);
+  opacity:.05;
+}
 
-/* Dragon bigger & highly visible */
-.dragon-svg{width:130px;height:130px;filter:drop-shadow(0 0 25px rgba(0,163,224,0.8));animation:float 5s ease-in-out infinite,glow 3s infinite;} 
-@keyframes float{0%{transform:translateY(0);}50%{transform:translateY(-10px);}100%{transform:translateY(0);}}
-@keyframes glow{0%{filter:drop-shadow(0 0 12px rgba(0,163,224,0.3));}50%{filter:drop-shadow(0 0 38px rgba(0,163,224,0.8));}100%{filter:drop-shadow(0 0 12px rgba(0,163,224,0.3));}}
+/* ========= TOPBAR ========= */
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;position:relative;z-index:3;}
 
-.brand h1{margin:0;font-size:1.6rem;color:var(--cyan-soft);letter-spacing:2px;}
+/* DRAGON LOGO — versione “Kali neon” */
+.logo-wrap{
+  width:90px;height:90px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.4);
+  backdrop-filter:blur(6px);
+  box-shadow:0 0 30px rgba(0,183,255,.5);
+}
+.dragon-svg{
+  width:120px;height:120px;
+  filter:drop-shadow(0 0 18px rgba(0,183,255,.9));
+  animation:dragon-float 4s ease-in-out infinite;
+}
+@keyframes dragon-float{
+  0%{transform:translateY(0) rotate(-3deg);}
+  50%{transform:translateY(-10px) rotate(3deg);}
+  100%{transform:translateY(0) rotate(-3deg);}
+}
 
-/* Nav buttons */
-.btn{padding:10px 14px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text);cursor:pointer;text-decoration:none;transition:0.25s;font-weight:700;}
-.btn:hover{box-shadow:0 0 15px rgba(0,163,224,0.4);color:var(--cyan-soft);} 
-.btn-primary{border-color:var(--cyan);color:var(--cyan);} 
+.brand h1{margin:0;color:var(--cyan-soft);letter-spacing:2px;}
+
+/* Nav Buttons */
+.btn{
+  padding:10px 14px;border-radius:10px;
+  color:var(--cyan-soft);cursor:pointer;
+  border:1px solid rgba(255,255,255,0.08);
+  background:rgba(255,255,255,0.02);
+  font-weight:700;text-decoration:none;margin-left:10px;
+  transition:.25s;
+}
+.btn:hover{box-shadow:0 0 14px rgba(0,183,255,0.6);}
 
 /* HERO */
-.hero{display:flex;gap:30px;flex-wrap:wrap;align-items:center;margin-top:10px;}
-.avatar{width:150px;height:150px;border-radius:50%;object-fit:cover;border:3px solid var(--cyan);box-shadow:0 0 30px rgba(0,163,224,0.4);} 
-.hero-text h2{font-size:2.4rem;margin:0;color:var(--cyan-soft);text-shadow:0 0 12px rgba(65,195,255,0.4);} 
-.lead{color:var(--muted);font-size:1.05rem;line-height:1.45;margin-top:8px;}
-.actions{margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;}
+.hero{display:flex;gap:30px;flex-wrap:wrap;align-items:center;}
+.avatar{
+  width:150px;height:150px;border-radius:50%;object-fit:cover;
+  border:3px solid var(--cyan);box-shadow:0 0 30px rgba(0,183,255,.4);
+}
+.hero h2{color:var(--cyan-soft);font-size:2.4rem;margin:0;}
 
-/* Sections dynamic cards */
-.section{margin-top:40px;padding:20px;border-radius:var(--radius);background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);backdrop-filter:blur(6px);box-shadow:0 0 25px rgba(0,0,0,0.6);} 
-.section h3{margin:0 0 14px;color:var(--cyan);font-size:1.3rem;text-shadow:0 0 8px rgba(0,163,224,0.4);} 
+/* Sections */
+.section{
+  padding:20px;margin-top:35px;border-radius:var(--radius);
+  background:var(--panel);
+  border:1px solid rgba(255,255,255,0.06);
+  backdrop-filter:blur(6px);
+  display:none;
+}
+.section.active{display:block;}
 
-/* Navigable sections (SPA-style) */
-.nav-section{cursor:pointer;padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);transition:0.25s;}
-.nav-section:hover{background:rgba(0,163,224,0.08);transform:translateY(-6px);} 
+.section h3{
+  margin:0 0 15px;
+  color:var(--cyan);font-size:1.4rem;
+  text-shadow:0 0 8px rgba(0,183,255,.4);
+}
 
-/* Projects */
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;}
-.card{padding:16px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);transition:0.3s;}
-.card:hover{transform:translateY(-8px) scale(1.02);box-shadow:0 0 22px rgba(0,163,224,0.5);} 
+/* Cards */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:20px;
+}
+.card{
+  padding:16px;border-radius:14px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,0.06);
+  transition:.25s;
+}
+.card:hover{
+  transform:translateY(-6px) scale(1.02);
+  box-shadow:0 0 22px rgba(0,183,255,.5);
+}
 
-/* Hall of Tools (3D neon hover) */
-.tools{display:flex;gap:12px;flex-wrap:wrap;}
-.tool{padding:12px 14px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);transition:0.3s;}
-.tool:hover{transform:translateY(-6px) scale(1.05) rotateX(10deg);box-shadow:0 0 18px rgba(0,163,224,0.5);} 
-
-/* Hack terminal */
-.hack-lines{background:rgba(0,0,0,0.4);border-radius:10px;padding:12px;font-size:0.95rem;white-space:pre-wrap;min-height:120px;overflow:hidden;color:var(--muted);} 
-.cursor{width:8px;height:18px;background:var(--cyan-soft);display:inline-block;margin-left:6px;animation:blink .8s infinite;} 
-@keyframes blink{50%{opacity:0;}}
-
-/* Footer */
-.footer{text-align:center;color:var(--muted);margin:40px 0 120px;}
+/* Back button */
+.back-btn{
+  margin-top:20px;
+  display:inline-block;
+  padding:10px 14px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,.06);
+  color:var(--cyan);
+  cursor:pointer;
+}
+.back-btn:hover{background:rgba(0,183,255,0.08);}
 </style>
 </head>
+
 <body>
-<canvas id="matrix"></canvas>
-<div class="glitch-layer"></div>
+<canvas id="matrix-canvas"></canvas>
+<div class="glitch"></div>
+
 <div class="container">
 
-<div class="topbar">
-  <div class="brand">
-    <div class="logo-wrap">
-      <svg class="dragon-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <path d="M90 20 C120 10 160 30 150 60 C140 95 85 95 70 80 C55 65 40 60 25 70 C10 80 20 110 45 120 C60 130 90 140 115 136 C140 132 165 110 170 90" stroke="var(--cyan)" stroke-width="7" fill="none" stroke-linecap="round"/>
-        <circle cx="92" cy="22" r="5" fill="var(--cyan-soft)" />
-      </svg>
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo-wrap">
+        <!-- NEW DRAGON LOGO -->
+        <svg class="dragon-svg" viewBox="0 0 200 200">
+          <path d="M40 140 C20 100 60 20 120 30 C180 40 170 120 110 150 C80 165 55 160 40 140 Z"
+            stroke="var(--cyan)" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <circle cx="125" cy="55" r="6" fill="var(--cyan-soft)" />
+        </svg>
+      </div>
+      <h1>3F3ST0</h1>
     </div>
-    <h1>3F3ST0</h1>
+
+    <div class="controls">
+      <button class="btn" onclick="openSection('cv')">CV</button>
+      <button class="btn" onclick="openSection('projects')">Progetti</button>
+      <button class="btn" onclick="openSection('tools')">Tools</button>
+      <a class="btn" href="links.html">Contatti</a>
+    </div>
   </div>
 
-  <div class="controls">
-    <a class="btn" href="#cv">CV</a>
-    <a class="btn" href="#projects">Progetti</a>
-    <a class="btn" href="#tools">Tools</a>
-    <a class="btn" href="links.html">Contatti</a>
+  <!-- HERO -->
+  <div class="hero">
+    <img src="src/avatar.jpg" class="avatar">
+    <div>
+      <h2>3F3ST0</h2>
+      <p class="lead">
+        Cybersecurity Engineer & DevSecOps — Penetration test, reverse engineering, exploit dev, cloud security, offensive tooling.
+      </p>
+    </div>
   </div>
-</div>
 
-<div class="hero">
-  <img src="src/avatar.jpg" class="avatar" alt="avatar" />
-  <div class="hero-text">
-    <h2>3F3ST0</h2>
-    <p class="lead">Cybersecurity Engineer & DevSecOps — esperto in penetration test, reverse engineering, exploit development, sicurezza cloud (AWS/GCP/Azure), automazione CI/CD e offensive security tooling.</p>
+  <!-- SECTIONS -->
+  <div class="section" id="cv">
+    <h3>Curriculum Vitae</h3>
+    <p><b>Esempio contenuti:</b></p>
+    <ul>
+      <li>🧠 Competenze tecniche: Pentest, malware analysis, Red Teaming, CI/CD Security.</li>
+      <li>📜 Certificazioni: OSCP, eJPT, eWPT, AZ-900.</li>
+      <li>💼 Esperienze: Cybersecurity Engineer @ Azienda X.</li>
+    </ul>
+    <span class="back-btn" onclick="hideSections()">← Torna indietro</span>
   </div>
+
+  <div class="section" id="projects">
+    <h3>Progetti</h3>
+    <div class="grid">
+      <div class="card"><b>Offensive Toolkit</b><br>Framework PT modulare.</div>
+      <div class="card"><b>ReverseLab</b><br>Malware sandbox.</div>
+    </div>
+    <span class="back-btn" onclick="hideSections()">← Torna indietro</span>
+  </div>
+
+  <div class="section" id="tools">
+    <h3>Tools</h3>
+    <div class="grid">
+      <div class="card">Wireshark</div>
+      <div class="card">Ghidra</div>
+      <div class="card">Burp Suite</div>
+      <div class="card">Nmap</div>
+    </div>
+    <span class="back-btn" onclick="hideSections()">← Torna indietro</span>
+  </div>
+
 </div>
 
-<div class="section" id="cv">
-  <h3>Curriculum</h3>
-  <div class="nav-section">Competenze Tecniche</div>
-  <div class="nav-section">Certificazioni</div>
-  <div class="nav-section">Esperienze Lavorative</div>
-</div>
+<!-- ===== JS: MATRIX + SECTIONS ===== -->
+<script>
+// MATRIX BACKGROUND
+const canvas=document.getElementById("matrix-canvas");
+const ctx=canvas.getContext("2d");
+canvas.height=window.innerHeight;
+canvas.width=window.innerWidth;
+const chars="01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&*@";
+const drops=Array(Math.floor(canvas.width/14)).fill(1);
 
-<div class="section" id="projects">
-  <h3>Progetti</h3>
-  <div class="grid">
-    <div class="card"><b>Offensive Toolkit</b><br>Framework PT modulare.</div>
-    <div class="card"><b>Reverse Lab</b><br>Sandbox malware.
+function drawMatrix(){
+  ctx.fillStyle="rgba(0,0,0,0.07)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="#00b7ff";
+  ctx.font="14px monospace";
+  drops.forEach((y,i)=>{
+    const text=chars[Math.floor(Math.random()*chars.length)];
+    ctx.fillText(text,i*14,y*14);
+    if(y*14>canvas.height && Math.random()>0.98) drops[i]=0;
+    drops[i]++;
+  });
+}
+setInterval(drawMatrix,40);
+
+// SECTION SWITCHING
+function hideSections(){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+}
+
+function openSection(id){
+  hideSections();
+  document.getElementById(id).classList.add("active");
+}
+</script>
+
+</body>
+</html>
