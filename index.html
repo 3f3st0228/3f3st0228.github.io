@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>3F3ST0 — Cybersecurity Portfolio</title>
+<link rel="icon" href="favicon.ico" />
+<style>
+/* ---------- THEME COLORS (Kali / Parrot toggle) ---------- */
+:root {
+  --bg: #0b0d10;
+  --panel: #0f1316;
+  --kali-blue: #00a3e0;
+  --kali-accent: #268bd2;
+  --parrot-green: #2fe07a;
+  --text: #dfeefc;
+  --muted: #93a3b2;
+  --glass: rgba(255,255,255,0.03);
+  --radius: 14px;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Light-ish (Parrot) variant will be toggled via class .parrot on body */
+body { margin:0; font-family: var(--mono); color:var(--text); background: var(--bg); overflow-x:hidden; }
+
+/* Container */
+.container { max-width: 1100px; margin: 32px auto; padding: 20px; position:relative; z-index:2; }
+
+/* NAV / TOGGLE */
+.topbar { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:18px; }
+.brand { display:flex; gap:12px; align-items:center; }
+.logo-wrap { width:64px; height:64px; display:flex; align-items:center; justify-content:center; border-radius:12px; background:linear-gradient(135deg, rgba(0,0,0,0.25), rgba(255,255,255,0.02)); box-shadow:0 6px 30px rgba(0,0,0,0.6); }
+.brand h1 { margin:0; font-size:1.05rem; color:var(--kali-blue); letter-spacing:1px; }
+.controls { display:flex; gap:8px; align-items:center; }
+
+/* BUTTONS */
+.btn { padding:8px 12px; border-radius:10px; background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--text); text-decoration:none; cursor:pointer; font-weight:600;}
+.btn-primary { border-color:var(--kali-blue); color:var(--kali-blue); }
+.btn-ghost{ background:transparent; border:1px dashed rgba(255,255,255,0.03); color:var(--muted); }
+
+/* HERO */
+.hero { display:flex; gap:24px; align-items:center; flex-wrap:wrap; margin-top:6px; }
+.avatar { width:140px; height:140px; border-radius:50%; object-fit:cover; border:3px solid var(--kali-blue); box-shadow:0 8px 30px rgba(0,163,224,0.12); }
+.hero-text { max-width:700px; }
+.hero-text h2{ margin:0; font-size:2rem; color:var(--kali-blue); text-shadow:0 0 12px rgba(0,163,224,0.15) }
+.lead { color:var(--muted); margin-top:8px; line-height:1.45; }
+
+/* ACTIONS */
+.actions { margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; }
+
+/* SECTIONS */
+.section { margin-top:36px; padding:18px; background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border-radius:12px; border:1px solid rgba(255,255,255,0.03); box-shadow:0 8px 30px rgba(2,6,23,0.6); }
+.section h3 { margin:0 0 12px 0; color:var(--kali-accent); font-size:1.05rem; }
+
+/* PROJECT CARDS */
+.grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap:14px; }
+.card { padding:14px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border:1px solid rgba(255,255,255,0.03); position:relative; overflow:hidden; transition:transform .28s, box-shadow .28s; }
+.card:hover{ transform: translateY(-8px); box-shadow: 0 18px 50px rgba(0,0,0,0.6); }
+.card .title { color:var(--kali-blue); font-weight:700; margin-bottom:6px; }
+.card .desc { color:var(--muted); font-size:0.95rem; }
+
+/* HALL OF TOOLS */
+.tools { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+.tool { padding:10px 12px; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(0,0,0,0.2); color:var(--text); font-weight:700; transition:transform .22s, box-shadow .22s; }
+.tool:hover{ transform:translateY(-6px) scale(1.04); box-shadow:0 10px 30px rgba(0,163,224,0.12); }
+
+/* FOOTER */
+.footer { text-align:center; color:var(--muted); margin:28px 0 120px; }
+
+/* MATRIX CANVAS (full-screen behind content) */
+#matrix { position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; opacity:0.14; mix-blend-mode:screen; }
+
+/* GLITCH LAYERS */
+.glitch-layer { position:fixed; inset:0; z-index:0; pointer-events:none; background: repeating-linear-gradient( -45deg, rgba(0,0,0,0.0) 0px, rgba(0,0,0,0.0) 4px, rgba(255,255,255,0.01) 5px ); opacity:0.06; }
+
+/* DRAGON SVG inlined: bigger, glow */
+.dragon-svg { width:120px; height:120px; transform-origin:center; filter:drop-shadow(0 0 22px rgba(0,163,224,0.25)); animation:drift 5s ease-in-out infinite, neonPulse 3s infinite; }
+@keyframes drift{ 0%{ transform: translateY(0) rotate(-2deg);} 50%{ transform:translateY(-8px) rotate(2deg);} 100%{ transform:translateY(0) rotate(-2deg);} }
+@keyframes neonPulse{ 0%{ filter:drop-shadow(0 0 8px rgba(0,163,224,0.2)); } 50%{ filter:drop-shadow(0 0 26px rgba(0,163,224,0.45)); } 100%{ filter:drop-shadow(0 0 8px rgba(0,163,224,0.2)); } }
+
+/* TYPE HACK ANIMATION (lines appear like hack) */
+.hack-lines { background:linear-gradient(180deg, rgba(0,0,0,0.4), transparent); border-radius:10px; padding:12px; font-size:0.95rem; color:var(--muted); font-family:var(--mono); white-space:pre-wrap; line-height:1.5; overflow:hidden; position:relative;}
+.hack-lines .cursor { display:inline-block; width:8px; height:18px; background:var(--kali-blue); margin-left:6px; vertical-align:middle; animation:blinkCursor .8s step-end infinite; }
+@keyframes blinkCursor{ 50%{ opacity:0.06 } }
+
+/* TOGGLE SWITCH */
+.switch { display:inline-flex; align-items:center; gap:8px; padding:6px; border-radius:999px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); }
+.switch input{ display:none; }
+.switch .knob{ width:36px; height:20px; border-radius:999px; background:#071014; border:1px solid rgba(255,255,255,0.04); position:relative; }
+.knob::after{ content:''; width:14px; height:14px; background:var(--kali-blue); border-radius:50%; position:absolute; top:2px; left:2px; transition:left .28s; box-shadow:0 6px 18px rgba(0,163,224,0.14); }
+input:checked + .knob{ background:#071014; }
+input:checked + .knob::after{ left:20px; background:var(--parrot-green); box-shadow:0 6px 18px rgba(47,224,122,0.14); }
+
+/* PARROT THEME (body.parrot) overrides */
+body.parrot { --kali-blue: #2fe07a; --kali-accent: #1bb96a; --kali-green: #2fe07a; background:#07120a; }
+
+/* SMALL SCREEN */
+@media (max-width:720px){
+  .hero { flex-direction:column; align-items:center; text-align:center; }
+  .hero-text { max-width:100%; }
+  .container { padding:16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Matrix Canvas -->
+<canvas id="matrix"></canvas>
+<div class="glitch-layer" style="opacity:0.06;"></div>
+
+<div class="container" role="main">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="brand">
+      <!-- Inline Dragon SVG (animated by CSS) -->
+      <div class="logo-wrap" aria-hidden>
+        <svg class="dragon-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+          <!-- stylized dragon, simplified -->
+          <defs>
+            <linearGradient id="gA" x1="0" x2="1">
+              <stop offset="0" stop-color="#00a3e0"/><stop offset="1" stop-color="#268bd2"/>
+            </linearGradient>
+            <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <g transform="translate(10,10) scale(0.8)">
+            <path d="M90 20 C120 10 160 30 150 60 C140 95 85 95 70 80 C55 65 40 60 25 70 C10 80 20 110 45 120 C60 130 90 140 115 136 C140 132 165 110 170 90" stroke="url(#gA)" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+            <circle cx="92" cy="22" r="4" fill="#00a3e0" />
+            <path d="M72 68 C80 72 92 80 106 86" stroke="#00a3e0" stroke-width="3" fill="none" stroke-linecap="round"/>
+          </g>
+        </svg>
+      </div>
+      <div>
+        <h1>3F3ST0</h1>
+        <div style="font-size:0.82rem;color:var(--muted);">Cybersecurity Engineer • DevSecOps • PT • Reverse</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="switch" title="Toggle Kali ↔ Parrot">
+        <label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;">
+          <input id="themeToggle" type="checkbox" aria-label="Toggle theme">
+          <span class="knob"></span>
+        </label>
+      </div>
+      <button class="btn btn-primary" onclick="playBeep()">Ping</button>
+      <a class="btn btn-ghost" href="links.html">Contatti</a>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <img src="avatar.jpg" alt="3F3ST0 avatar" class="avatar" />
+    <div class="hero-text">
+      <h2 id="heroTitle">3F3ST0</h2>
+      <p class="lead" id="heroLead">DevSecOps Engineer e Cybersecurity Specialist — penetration testing, reverse engineering, exploit dev, cloud security (AWS/GCP/Azure), CI/CD security automation e tooling per offensive/defensive ops.</p>
+
+      <div class="actions">
+        <a class="btn btn-primary" href="resume.pdf" target="_blank">Scarica CV</a>
+        <a class="btn" href="#projects">Progetti</a>
+        <a class="btn" href="#tools">Hall of Tools</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- HACK-TYPE INTRO (animated lines) -->
+  <div class="section" style="margin-top:26px;">
+    <div class="hack-lines" id="hackOutput" aria-live="polite"></div>
+  </div>
+
+  <!-- Projects -->
+  <div class="section" id="projects" role="region" aria-labelledby="projectsTitle">
+    <h3 id="projectsTitle">Progetti</h3>
+    <div class="grid">
+      <div class="card" tabindex="0">
+        <div class="title">🔍 Offensive Security Toolkit</div>
+        <div class="desc">Framework modulare per automazioni pentest, enumeration e vulnerability chaining. (Parametrico — aggiungi dettagli)</div>
+      </div>
+      <div class="card" tabindex="0">
+        <div class="title">🧬 Reverse Analysis Lab</div>
+        <div class="desc">Toolkit per analisi statica/dinamica malware con report automatici e sandboxing containerizzato.</div>
+      </div>
+      <div class="card" tabindex="0">
+        <div class="title">☁️ Cloud Security CI/CD</div>
+        <div class="desc">Pipeline integrata per IaC scanning, SAST/DAST, e policy as code per AWS/GCP/Azure.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hall of Tools -->
+  <div class="section" id="tools" role="region" aria-labelledby="toolsTitle">
+    <h3 id="toolsTitle">Hall of Tools</h3>
+    <div class="tools" aria-hidden>
+      <div class="tool">nmap</div>
+      <div class="tool">Burp Suite</div>
+      <div class="tool">radare2</div>
+      <div class="tool">GDB / GEF</div>
+      <div class="tool">Wireshark</div>
+      <div class="tool">Metasploit</div>
+      <div class="tool">Docker / Kubernetes</div>
+      <div class="tool">Terraform</div>
+    </div>
+  </div>
+
+  <div class="footer">© <span id="year"></span> • 3F3ST0 — Cybersecurity Portfolio</div>
+
+</div>
+
+<script>
+/* ========== Utilities ========== */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ========== THEME TOGGLE ========== */
+const themeToggle = document.getElementById('themeToggle');
+themeToggle.addEventListener('change', (e) => {
+  document.body.classList.toggle('parrot', e.target.checked);
+});
+
+/* ========== MATRIX RAIN ========== */
+const c = document.getElementById('matrix');
+const ctx = c.getContext('2d');
+let w = c.width = innerWidth;
+let h = c.height = innerHeight;
+const columns = Math.floor(w / 14);
+const drops = new Array(columns).fill(1);
+
+function resizeMatrix() {
+  w = c.width = innerWidth;
+  h = c.height = innerHeight;
+}
+addEventListener('resize', resizeMatrix);
+
+function matrixLoop() {
+  ctx.fillStyle = 'rgba(0,0,0,0.04)';
+  ctx.fillRect(0,0,w,h);
+  ctx.fillStyle = 'rgba(46,160,200,0.9)'; // cyan
+  ctx.font = '13px monospace';
+  for (let i = 0; i < drops.length; i++) {
+    const text = String.fromCharCode(0x30A0 + Math.random() * 96);
+    ctx.fillText(text, i * 14, drops[i] * 14);
+    if (drops[i] * 14 > h && Math.random() > 0.975) drops[i] = 0;
+    drops[i]++;
+  }
+  requestAnimationFrame(matrixLoop);
+}
+matrixLoop();
+
+/* ========== GLITCHY HACK-TYPE OUTPUT + SOUND ========== */
+const hackOutput = document.getElementById('hackOutput');
+const lines = [
+  "Initializing secure context...",
+  "Mounting kernel hooks...",
+  "Enumerating network interfaces [eth0, wlan0]...",
+  "Launching automated penetration modules...",
+  "Running CVE scan (nmap + vulners) ...",
+  "Reverse engine: loading sample.bin",
+  "Analyzing syscall patterns...",
+  "Generating threat intelligence report...",
+  "Persistence module: sandboxed",
+  "Completed. Results saved to report_3f3st0.json"
+];
+let idx = 0;
+
+function typeLine(line, cb) {
+  let pos = 0;
+  function step() {
+    hackOutput.textContent = hackOutput.textContent + line.charAt(pos);
+    pos++;
+    if (pos < line.length) {
+      setTimeout(step, 28 + Math.random()*40);
+    } else {
+      hackOutput.textContent += '\n';
+      playBeep(60 + Math.random()*120, 0.07);
+      setTimeout(cb, 220);
+    }
+  }
+  step();
+}
+
+function runHackLines() {
+  if (idx < lines.length) {
+    typeLine(lines[idx++], runHackLines);
+  } else {
+    // final cursor blink
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    hackOutput.appendChild(cursor);
+  }
+}
+setTimeout(runHackLines, 800);
+
+/* Simple WebAudio beep function for UI */
+let audioCtx;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playBeep(freq=440, dur=0.12) {
+  try {
+    const actx = getAudioCtx();
+    const o = actx.createOscillator();
+    const g = actx.createGain();
+    o.type = 'sine';
+    o.frequency.value = freq;
+    o.connect(g);
+    g.connect(actx.destination);
+    g.gain.setValueAtTime(0.0001, actx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.12, actx.currentTime + 0.01);
+    o.start();
+    g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + dur);
+    o.stop(actx.currentTime + dur + 0.02);
+  } catch(e) { /* mute on failure */ }
+}
+
+/* ========== DRAGON / LOGO ENTRANCE ANIMATIONS ========== */
+/* simple subtle entrance: scale and fade */
+document.addEventListener('DOMContentLoaded', () => {
+  const logo = document.querySelector('.logo-wrap');
+  logo.style.transform = 'translateY(-8px) scale(.96)';
+  logo.style.opacity = '0';
+  setTimeout(()=>{ logo.style.transition='transform .7s cubic-bezier(.2,.9,.3,1), opacity .6s'; logo.style.transform='translateY(0) scale(1)'; logo.style.opacity='1'; playBeep(300,0.08); }, 120);
+});
+
+/* ========== Keyboard shortcut: press `t` to toggle theme, `p` to play beep ========== */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 't') { themeToggle.checked = !themeToggle.checked; themeToggle.dispatchEvent(new Event('change')); }
+  if (e.key === 'p') playBeep(520,0.08);
+});
+
+/* minor accessibility: focus styles to reveal outline for keyboard users */
+document.addEventListener('keyup', (e) => {
+  if (e.key === 'Tab') document.body.classList.add('show-focus');
+});
+</script>
+</body>
+</html>
