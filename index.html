@@ -12,8 +12,6 @@
   --cyan:#00b7ff;
   --cyan-soft:#6ad4ff;
   --text:#d8e8f7;
-  --muted:#7a8ba3;
-  --panel:rgba(255,255,255,0.06);
   --radius:16px;
   --mono:"JetBrains Mono", monospace;
   --transition:.35s ease-in-out;
@@ -49,40 +47,16 @@ body{
 .container{
   width:100%;
   max-width:900px;
+  display:flex;
   z-index:2;
 }
 
-/* ===== TOPBAR ===== */
-.topbar{
-  display:flex; justify-content:space-between; align-items:center;
-  margin-bottom:25px; position:relative; flex-wrap:wrap;
-}
-
-.logo-wrap{
-  width:150px; height:150px;
-  border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  background:rgba(0,0,0,.4);
-  backdrop-filter:blur(8px);
-  box-shadow:0 0 45px rgba(0,183,255,.7);
-  overflow:hidden;
-}
-
-.logo-wrap img{
-  width:140px; height:140px;
-  animation:dragon-float 4s ease-in-out infinite;
-}
-@keyframes dragon-float{
-  0%{transform:translateY(0) rotate(-2deg);}
-  50%{transform:translateY(-12px) rotate(2deg);}
-  100%{transform:translateY(0) rotate(-2deg);}
-}
-
-.controls{
+/* ===== SIDEBAR MENU LEFT ===== */
+.sidebar{
   display:flex;
-  flex-wrap:wrap;
+  flex-direction:column;
   gap:12px;
-  margin-top:10px;
+  margin-right:25px;
 }
 .btn{
   padding:10px 18px; border-radius:14px;
@@ -109,6 +83,9 @@ body{
 }
 
 /* ===== HERO ===== */
+.main-content{
+  flex:1;
+}
 .hero{
   display:flex; flex-wrap:wrap; gap:20px;
   align-items:center;
@@ -118,17 +95,11 @@ body{
   border-radius:16px;
   backdrop-filter:blur(6px);
   box-shadow:0 0 25px rgba(0,183,255,.3);
-  transition:transform .3s;
-}
-.hero:hover{
-  transform:translateY(-4px) scale(1.01);
 }
 .avatar{
   width:150px; height:150px; border-radius:50%; object-fit:cover;
   border:3px solid var(--cyan); box-shadow:0 0 30px rgba(0,183,255,.4);
-  transition:transform .3s;
 }
-.avatar:hover{transform:scale(1.05);}
 .hero-text{
   flex:1;
   max-width:600px;
@@ -149,7 +120,7 @@ body{
   display:inline-block;
   width:8px; height:18px;
   background:var(--cyan-soft);
-  margin-left:4px;
+  margin-left:2px;
   animation:blink .8s infinite;
   vertical-align:middle;
 }
@@ -162,16 +133,15 @@ body{
   border:1px solid rgba(255,255,255,0.06);
   backdrop-filter:blur(6px);
   display:none;
-  opacity:0; transform:translateY(30px) rotateX(5deg) scale(0.97);
+  opacity:0; transform:translateY(30px) scale(0.97);
   transition:opacity .45s ease, transform .45s ease;
 }
 .section.active{
   display:block;
   opacity:1;
-  transform:translateY(0) rotateX(0deg) scale(1);
+  transform:translateY(0) scale(1);
   animation:fadeInUp 0.6s ease forwards;
 }
-
 @keyframes fadeInUp{
   0%{opacity:0; transform:translateY(40px) scale(0.95);}
   100%{opacity:1; transform:translateY(0) scale(1);}
@@ -187,11 +157,9 @@ body{
 }
 .section h3 span.prompt{
   color:var(--cyan-soft);
-  display:block;
 }
 .section h3 span.title{
-  display:block;
-  margin-left:2ch;
+  color:var(--cyan);
 }
 .section h3 span.cursor{
   display:inline-block;
@@ -230,12 +198,8 @@ body{
 
 /* RESPONSIVE */
 @media(max-width:768px){
-  .hero{flex-direction:column; align-items:center;}
-  .topbar{flex-direction:column; gap:10px;}
-  .logo-wrap{width:120px;height:120px;}
-  .logo-wrap img{width:110px;height:110px;}
-  .hero-text h2{font-size:2rem;}
-  .hero-text p{font-size:0.95rem; text-align:center;}
+  .container{flex-direction:column;}
+  .sidebar{flex-direction:row;margin-bottom:15px;}
 }
 </style>
 </head>
@@ -246,85 +210,81 @@ body{
 
 <div class="container">
 
-  <!-- TOPBAR -->
-  <div class="topbar">
-    <div class="logo-wrap">
-      <img src="src/dragon.gif" alt="dragon logo">
+  <!-- SIDEBAR LEFT -->
+  <div class="sidebar">
+    <button class="btn" onclick="openSection('cv')">CV</button>
+    <button class="btn" onclick="openSection('projects')">Progetti</button>
+    <button class="btn" onclick="openSection('tools')">Tools</button>
+    <button class="btn" onclick="openSection('contacts')">Contatti</button>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- HERO -->
+    <div class="hero">
+      <img src="src/avatar.jpg" class="avatar">
+      <div class="hero-text">
+        <h2>Cybersecurity Engineer</h2>
+        <p class="lead">Specializzato in Penetration test, Reverse engineering, Exploit development e Cloud Security.<span class="cursor"></span></p>
+      </div>
     </div>
-    <div class="controls">
-      <button class="btn" onclick="openSection('cv')">CV</button>
-      <button class="btn" onclick="openSection('projects')">Progetti</button>
-      <button class="btn" onclick="openSection('tools')">Tools</button>
-      <button class="btn" onclick="openSection('contacts')">Contatti</button>
+
+    <!-- SECTIONS -->
+    <div class="section" id="cv">
+      <h3><span class="prompt">root@3f3st0:~$ </span><span class="title"></span><span class="cursor"></span></h3>
+      <ul>
+        <li>🧠 Competenze tecniche: Pentest, malware analysis, Red Teaming, CI/CD Security.</li>
+        <li>📜 Certificazioni: OSCP, eJPT, eWPT, AZ-900.</li>
+        <li>💼 Esperienze: Cybersecurity Engineer @ Azienda X.</li>
+      </ul>
     </div>
-  </div>
 
-  <!-- HERO -->
-  <div class="hero">
-    <img src="src/avatar.jpg" class="avatar">
-    <div class="hero-text">
-      <h2>Cybersecurity Engineer</h2>
-      <p class="lead">Specializzato in Penetration test, Reverse engineering, Exploit development e Cloud Security.<span class="cursor"></span></p>
+    <div class="section" id="projects">
+      <h3><span class="prompt">root@3f3st0:~$ </span><span class="title"></span><span class="cursor"></span></h3>
+      <div class="grid">
+        <div class="card"><b>Offensive Toolkit</b><br>Framework PT modulare.</div>
+        <div class="card"><b>ReverseLab</b><br>Malware sandbox.</div>
+      </div>
     </div>
-  </div>
 
-  <!-- SECTIONS -->
-  <div class="section" id="cv">
-    <h3><span class="prompt">root@3f3st0:~$</span><span class="title">Curriculum Vitae</span><span class="cursor"></span></h3>
-    <ul>
-      <li>🧠 Competenze tecniche: Pentest, malware analysis, Red Teaming, CI/CD Security.</li>
-      <li>📜 Certificazioni: OSCP, eJPT, eWPT, AZ-900.</li>
-      <li>💼 Esperienze: Cybersecurity Engineer @ Azienda X.</li>
-    </ul>
-  </div>
-
-  <div class="section" id="projects">
-    <h3><span class="prompt">root@3f3st0:~$</span><span class="title">Progetti</span><span class="cursor"></span></h3>
-    <div class="grid">
-      <div class="card"><b>Offensive Toolkit</b><br>Framework PT modulare.</div>
-      <div class="card"><b>ReverseLab</b><br>Malware sandbox.</div>
+    <div class="section" id="tools">
+      <h3><span class="prompt">root@3f3st0:~$ </span><span class="title"></span><span class="cursor"></span></h3>
+      <div class="grid">
+        <div class="card">Wireshark</div>
+        <div class="card">Ghidra</div>
+        <div class="card">Burp Suite</div>
+        <div class="card">Nmap</div>
+      </div>
     </div>
-  </div>
 
-  <div class="section" id="tools">
-    <h3><span class="prompt">root@3f3st0:~$</span><span class="title">Tools</span><span class="cursor"></span></h3>
-    <div class="grid">
-      <div class="card">Wireshark</div>
-      <div class="card">Ghidra</div>
-      <div class="card">Burp Suite</div>
-      <div class="card">Nmap</div>
+    <div class="section" id="contacts">
+      <h3><span class="prompt">root@3f3st0:~$ </span><span class="title"></span><span class="cursor"></span></h3>
+      <ul>
+        <li>Email: <a href="mailto:3f3st0.28@gmail.com" style="color:var(--cyan)">3f3st0.28@gmail.com</a></li>
+        <li>Telegram: <a href="#" style="color:var(--cyan)">t.me/efesto228</a></li>
+        <li>GitHub: <a href="#" style="color:var(--cyan)">github.com/3F3ST0228</a></li>
+      </ul>
     </div>
-  </div>
 
-  <div class="section" id="contacts">
-    <h3><span class="prompt">root@3f3st0:~$</span><span class="title">Contatti</span><span class="cursor"></span></h3>
-    <ul>
-      <li>Email: <a href="mailto:3f3st0.28@gmail.com" style="color:var(--cyan)">3f3st0.28@gmail.com</a></li>
-      <li>Telegram: <a href="#" style="color:var(--cyan)">t.me/efesto228</a></li>
-      <li>GitHub: <a href="#" style="color:var(--cyan)">github.com/3F3ST0228</a></li>
-    </ul>
   </div>
-
 </div>
 
 <script>
-// ===== MATRIX TERMINAL EFFECT =====
+// ===== MATRIX TERMINAL =====
 const canvas = document.getElementById("matrix-canvas");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&*@";
 const columns = Math.floor(canvas.width/14);
 const drops = Array(columns).fill(0).map(()=>Math.floor(Math.random()*canvas.height/14));
 const speeds = Array(columns).fill(0).map(()=>0.3+Math.random()*1.2);
-
 function drawMatrix(){
   ctx.fillStyle="rgba(0,0,0,0.05)";
   ctx.fillRect(0,0,canvas.width,canvas.height);
   ctx.fillStyle="#00b7ff";
   ctx.font="14px monospace";
-
   drops.forEach((y,i)=>{
     const text = letters[Math.floor(Math.random()*letters.length)];
     ctx.fillText(text,i*14,y*14);
@@ -335,12 +295,27 @@ function drawMatrix(){
 }
 setInterval(drawMatrix,35);
 
-// ===== SECTION SWITCHING =====
+// ===== OPEN SECTIONS WITH TYPING EFFECT =====
 function hideSections(){
   document.querySelectorAll(".section").forEach(s=>{
     s.classList.remove("active");
     s.querySelectorAll(".card").forEach(c=>c.classList.remove("show"));
+    const title = s.querySelector(".title");
+    if(title) title.textContent = "";
   });
+}
+
+function typeTitle(element, text){
+  element.textContent = "";
+  let i = 0;
+  function type(){
+    if(i < text.length){
+      element.textContent += text[i];
+      i++;
+      setTimeout(type, 50);
+    }
+  }
+  type();
 }
 
 function openSection(id){
@@ -348,6 +323,15 @@ function openSection(id){
   const sec = document.getElementById(id);
   sec.classList.add("active");
   sec.scrollIntoView({behavior:"smooth"});
+
+  const title = sec.querySelector(".title");
+  const titles = {
+    cv:"Curriculum Vitae",
+    projects:"Progetti",
+    tools:"Tools",
+    contacts:"Contatti"
+  };
+  typeTitle(title, titles[id]);
 
   const cards = sec.querySelectorAll(".card");
   cards.forEach((c,i)=>{
