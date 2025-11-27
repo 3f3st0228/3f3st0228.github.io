@@ -170,13 +170,30 @@ body{
   display:block;
   opacity:1;
   transform:translateY(0) rotateX(0deg) scale(1);
+  animation:fadeInUp 0.6s ease forwards;
+}
+
+@keyframes fadeInUp{
+  0%{opacity:0; transform:translateY(40px) scale(0.95);}
+  100%{opacity:1; transform:translateY(0) scale(1);}
 }
 
 .section h3{
   margin:0 0 15px;
   color:var(--cyan);
-  font-size:1.5rem;
+  font-size:1.4rem;
+  font-family:var(--mono);
   text-shadow:0 0 10px rgba(0,183,255,.5);
+}
+
+/* Terminal style titles */
+.section h3::before{
+  content:"root@3f3st0:~$ ";
+  color:var(--cyan-soft);
+}
+.section h3::after{
+  content:"\A→ ";
+  white-space: pre;
 }
 
 /* ===== CARDS ===== */
@@ -187,9 +204,13 @@ body{
   padding:18px; border-radius:14px;
   background:rgba(255,255,255,.03);
   border:1px solid rgba(255,255,255,0.06);
-  transition:transform .35s, box-shadow .35s;
+  transition:transform .35s, box-shadow .35s, opacity .35s;
   cursor:pointer;
   perspective:1000px;
+  opacity:0;
+}
+.card.show{
+  opacity:1;
 }
 .card:hover{
   transform:rotateY(6deg) rotateX(4deg) translateY(-6px) scale(1.04);
@@ -200,21 +221,6 @@ body{
   0%{box-shadow:0 0 28px rgba(0,183,255,.5);}
   50%{box-shadow:0 0 35px rgba(0,183,255,.6);}
   100%{box-shadow:0 0 28px rgba(0,183,255,.5);}
-}
-
-/* ===== BACK BUTTON ===== */
-.back-btn{
-  margin-top:20px; display:inline-block;
-  padding:10px 16px; border-radius:12px;
-  background:rgba(255,255,255,0.03);
-  border:1px solid rgba(255,255,255,.06);
-  color:var(--cyan); cursor:pointer;
-  transition:all .25s;
-}
-.back-btn:hover{
-  background:rgba(0,183,255,0.08);
-  box-shadow:0 0 15px #00b7ff,0 0 25px #6ad4ff;
-  animation:neon-flicker 0.15s infinite alternate;
 }
 
 /* RESPONSIVE */
@@ -265,7 +271,6 @@ body{
       <li>📜 Certificazioni: OSCP, eJPT, eWPT, AZ-900.</li>
       <li>💼 Esperienze: Cybersecurity Engineer @ Azienda X.</li>
     </ul>
-    <span class="back-btn" onclick="hideSections()">← Torna indietro</span>
   </div>
 
   <div class="section" id="projects">
@@ -274,7 +279,6 @@ body{
       <div class="card"><b>Offensive Toolkit</b><br>Framework PT modulare.</div>
       <div class="card"><b>ReverseLab</b><br>Malware sandbox.</div>
     </div>
-    <span class="back-btn" onclick="hideSections()">← Torna indietro</span>
   </div>
 
   <div class="section" id="tools">
@@ -285,17 +289,15 @@ body{
       <div class="card">Burp Suite</div>
       <div class="card">Nmap</div>
     </div>
-    <span class="back-btn" onclick="hideSections()">← Torna indietro</span>
   </div>
 
   <div class="section" id="contacts">
     <h3>Contatti</h3>
     <ul>
-      <li> -> Email: <a href="mailto:3f3st0.28@gmail.com" style="color:var(--cyan)">3f3st0.28@gmail.com</a></li>
-      <li> -> Telegram: <a href="#" style="color:var(--cyan)">t.me/efesto228</a></li>
-      <li> -> GitHub: <a href="#" style="color:var(--cyan)">github.com/3f3st0228</a></li>
+      <li>Email: <a href="mailto:3f3st0.28@gmail.com" style="color:var(--cyan)">3f3st0.28@gmail.com</a></li>
+      <li>Telegram: <a href="#" style="color:var(--cyan)">t.me/efesto228</a></li>
+      <li>GitHub: <a href="#" style="color:var(--cyan)">github.com/3F3ST0228</a></li>
     </ul>
-    <span class="back-btn" onclick="hideSections()">← Torna indietro</span>
   </div>
 
 </div>
@@ -330,15 +332,23 @@ setInterval(drawMatrix,35);
 
 // ===== SECTION SWITCHING =====
 function hideSections(){
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll(".section").forEach(s=>{
+    s.classList.remove("active");
+    s.querySelectorAll(".card").forEach(c=>c.classList.remove("show"));
+  });
 }
+
 function openSection(id){
   hideSections();
   const sec = document.getElementById(id);
   sec.classList.add("active");
   sec.scrollIntoView({behavior:"smooth"});
+
+  // Show cards with delay
   const cards = sec.querySelectorAll(".card");
-  cards.forEach((c,i)=>{ c.style.transitionDelay = (i*0.08)+"s"; });
+  cards.forEach((c,i)=>{
+    setTimeout(()=>c.classList.add("show"), i*100);
+  });
 }
 </script>
 </body>
