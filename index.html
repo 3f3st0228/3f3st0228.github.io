@@ -7,7 +7,6 @@
 <link rel="icon" href="src/avatar.jpg">
 
 <style>
-/* ===== THEME ===== */
 :root{
   --bg:#01020a;
   --cyan:#00b7ff;
@@ -178,22 +177,28 @@ body{
   100%{opacity:1; transform:translateY(0) scale(1);}
 }
 
+/* ===== TERMINAL STYLE TITLES ===== */
 .section h3{
   margin:0 0 15px;
   color:var(--cyan);
   font-size:1.4rem;
   font-family:var(--mono);
-  text-shadow:0 0 10px rgba(0,183,255,.5);
-}
-
-/* Terminal style titles */
-.section h3::before{
-  content:"root@3f3st0:~$ ";
-  color:var(--cyan-soft);
-}
-.section h3::after{
-  content:"\A→ ";
   white-space: pre;
+}
+.section h3 span.prompt{
+  color:var(--cyan-soft);
+  display:block;
+}
+.section h3 span.title{
+  display:block;
+  margin-left:2ch;
+}
+.section h3 span.cursor{
+  display:inline-block;
+  width:8px; height:18px;
+  background:var(--cyan-soft);
+  animation:blink .8s infinite;
+  vertical-align:middle;
 }
 
 /* ===== CARDS ===== */
@@ -265,7 +270,7 @@ body{
 
   <!-- SECTIONS -->
   <div class="section" id="cv">
-    <h3>Curriculum Vitae</h3>
+    <h3><span class="prompt">root@3f3st0:~$</span><span class="title">Curriculum Vitae</span><span class="cursor"></span></h3>
     <ul>
       <li>🧠 Competenze tecniche: Pentest, malware analysis, Red Teaming, CI/CD Security.</li>
       <li>📜 Certificazioni: OSCP, eJPT, eWPT, AZ-900.</li>
@@ -274,7 +279,7 @@ body{
   </div>
 
   <div class="section" id="projects">
-    <h3>Progetti</h3>
+    <h3><span class="prompt">root@3f3st0:~$</span><span class="title">Progetti</span><span class="cursor"></span></h3>
     <div class="grid">
       <div class="card"><b>Offensive Toolkit</b><br>Framework PT modulare.</div>
       <div class="card"><b>ReverseLab</b><br>Malware sandbox.</div>
@@ -282,7 +287,7 @@ body{
   </div>
 
   <div class="section" id="tools">
-    <h3>Tools</h3>
+    <h3><span class="prompt">root@3f3st0:~$</span><span class="title">Tools</span><span class="cursor"></span></h3>
     <div class="grid">
       <div class="card">Wireshark</div>
       <div class="card">Ghidra</div>
@@ -292,7 +297,7 @@ body{
   </div>
 
   <div class="section" id="contacts">
-    <h3>Contatti</h3>
+    <h3><span class="prompt">root@3f3st0:~$</span><span class="title">Contatti</span><span class="cursor"></span></h3>
     <ul>
       <li>Email: <a href="mailto:3f3st0.28@gmail.com" style="color:var(--cyan)">3f3st0.28@gmail.com</a></li>
       <li>Telegram: <a href="#" style="color:var(--cyan)">t.me/efesto228</a></li>
@@ -344,7 +349,6 @@ function openSection(id){
   sec.classList.add("active");
   sec.scrollIntoView({behavior:"smooth"});
 
-  // Show cards with delay
   const cards = sec.querySelectorAll(".card");
   cards.forEach((c,i)=>{
     setTimeout(()=>c.classList.add("show"), i*100);
